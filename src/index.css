@@ -1218,13 +1218,21 @@
   }
 
   .testimonial-photo-wrap {
+    position: relative;
     overflow: hidden;
+    isolation: isolate;
+    border-radius: 2.5rem 2.5rem 0 0;
+    transform: translateZ(0);
+    clip-path: inset(0 round 2.5rem 2.5rem 0 0);
   }
 
   .testimonial-photo-image {
+    display: block;
+    min-height: 100%;
     transform: scale(1.04);
     transform-origin: center center;
     will-change: transform;
+    backface-visibility: hidden;
     animation: testimonial-photo-zoom 7.2s ease-in-out infinite alternate;
   }
 
@@ -1287,6 +1295,13 @@
 
   .testimonial-transition {
     animation: testimonial-swap 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (min-width: 1024px) {
+    .testimonial-photo-wrap {
+      border-radius: 2.5rem 0 0 2.5rem;
+      clip-path: inset(0 round 2.5rem 0 0 2.5rem);
+    }
   }
 
   .contact-input {
