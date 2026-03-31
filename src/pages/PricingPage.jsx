@@ -18,20 +18,20 @@ const pricingMetrics = [
 const pricingPlans = [
   {
     name: "Básico",
-    rate: "1,49% /Venta",
+    rateValue: 1.49,
     guarantee: "Garantia mínima de $0 COP",
     volume: "Volumen esperado de < $40M COP",
   },
   {
     name: "Esencial",
-    rate: "1,29% /Venta",
+    rateValue: 1.29,
     guarantee: "Garantia mínima de $499 COP",
     volume: "Volumen esperado de ≥ $40M y < $150M COP",
     featured: true,
   },
   {
     name: "Estándar",
-    rate: "0,99% /Venta",
+    rateValue: 0.99,
     guarantee: "Garantia mínima de ≥ $1’449 COP",
     volume: "Volumen esperado de ≥ $150M COP",
   },
@@ -62,12 +62,141 @@ const alternativePaymentLogos = [
 ];
 
 const alternativePaymentStats = [
-  { value: "2,99%", label: "Tarifa" },
-  { value: "$500", label: "Costo por transacción" },
-  { value: "$0 COP", label: "Costos bancarios" },
-  { value: "Semanal", label: "Deposito" },
-  { value: "$0 COP", label: "Costo de depósito" },
+  { kind: "percent", value: 2.99, label: "Tarifa" },
+  { kind: "currency", value: 500, label: "Costo por transacción" },
+  { kind: "currencyCop", value: 0, startValue: 500, direction: "down", label: "Costos bancarios" },
+  { kind: "word", value: "Semanal", label: "Deposito" },
+  { kind: "currencyCop", value: 0, startValue: 500, direction: "down", label: "Costo de depósito" },
 ];
+
+function useInViewOnce(options = {}) {
+  const elementRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (isVisible || !elementRef.current) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+        observer.disconnect();
+      }
+    }, options);
+
+    observer.observe(elementRef.current);
+
+    return () => observer.disconnect();
+  }, [isVisible, options]);
+
+  return [elementRef, isVisible];
+}
+
+function useCountAnimation({ start, end, active, duration = 1400 }) {
+  const [count, setCount] = useState(active ? start : start);
+
+  useEffect(() => {
+    if (!active) {
+      setCount(start);
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (mediaQuery.matches) {
+      setCount(end);
+      return undefined;
+    }
+
+    let frameId;
+    let startTime;
+
+    const animate = (time) => {
+      if (startTime === undefined) {
+        startTime = time;
+      }
+
+      const progress = Math.min((time - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(start + (end - start) * eased);
+
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(animate);
+      }
+    };
+
+    frameId = window.requestAnimationFrame(animate);
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [active, duration, end, start]);
+
+  return count;
+}
+
+function AnimatedPlanRate({ value, active }) {
+  const count = useCountAnimation({ start: 0, end: value, active, duration: 1300 });
+  const formatted = count.toLocaleString("es-CO", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return `${formatted}% /Venta`;
+}
+
+function AnimatedWordValue({ value, active }) {
+  const [displayValue, setDisplayValue] = useState(active ? "" : "");
+
+  useEffect(() => {
+    if (!active) {
+      setDisplayValue("");
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (mediaQuery.matches) {
+      setDisplayValue(value);
+      return undefined;
+    }
+
+    let index = 0;
+    const intervalId = window.setInterval(() => {
+      index += 1;
+      setDisplayValue(value.slice(0, index));
+
+      if (index >= value.length) {
+        window.clearInterval(intervalId);
+      }
+    }, 80);
+
+    return () => window.clearInterval(intervalId);
+  }, [active, value]);
+
+  return displayValue || "\u00A0";
+}
+
+function AnimatedAlternativeStat({ item, active }) {
+  if (item.kind === "word") {
+    return <AnimatedWordValue value={item.value} active={active} />;
+  }
+
+  const start = item.direction === "down" ? item.startValue ?? item.value : 0;
+  const count = useCountAnimation({ start, end: item.value, active, duration: 1300 });
+
+  if (item.kind === "percent") {
+    return `${count.toLocaleString("es-CO", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}%`;
+  }
+
+  if (item.kind === "currencyCop") {
+    return `$${Math.round(count).toLocaleString("es-CO")} COP`;
+  }
+
+  return `$${Math.round(count).toLocaleString("es-CO")}`;
+}
 
 function MetricCounter({ value }) {
   const isNegative = value.startsWith("-");
@@ -267,6 +396,8 @@ function PricingPage() {
   const pricingPointPhaseStartRef = useRef(0);
   const pricingPointPhaseRemainingRef = useRef(2000);
   const pricingPointPhaseRef = useRef("read");
+  const [plansSectionRef, plansSectionVisible] = useInViewOnce({ threshold: 0.3 });
+  const [alternativeSectionRef, alternativeSectionVisible] = useInViewOnce({ threshold: 0.3 });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -421,7 +552,7 @@ function PricingPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
+      <section ref={plansSectionRef} className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
         <Reveal className="max-w-3xl">
           <span className="eyebrow">Planes</span>
           <h2 className="section-title text-[var(--color-brand-900)]">Planes para pagos con tarjeta</h2>
@@ -436,7 +567,9 @@ function PricingPage() {
                   <h3 className="text-2xl font-black text-[var(--color-brand-900)]">{plan.name}</h3>
                   {plan.featured ? <span className="pricing-plan-pill">Más elegido</span> : null}
                 </div>
-                <p className="mt-6 text-4xl font-black tracking-tight text-[var(--color-brand-900)]">{plan.rate}</p>
+                <p className="mt-6 text-4xl font-black tracking-tight text-[var(--color-brand-900)]">
+                  <AnimatedPlanRate value={plan.rateValue} active={plansSectionVisible} />
+                </p>
                 <div className="mt-8 flex-1 space-y-4">
                   <div className="pricing-plan-row">
                     <span className="pricing-plan-icon">
@@ -515,7 +648,7 @@ function PricingPage() {
         </Reveal>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
+      <section ref={alternativeSectionRef} className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
           <Reveal variant="left" className="max-w-2xl">
             <span className="eyebrow">Medios de pago alternativos</span>
@@ -537,7 +670,9 @@ function PricingPage() {
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {alternativePaymentStats.map((item) => (
                   <div key={item.label} className="pricing-alt-stat">
-                    <p className="text-3xl font-black tracking-tight text-[var(--color-brand-900)]">{item.value}</p>
+                    <p className="text-3xl font-black tracking-tight text-[var(--color-brand-900)]">
+                      <AnimatedAlternativeStat item={item} active={alternativeSectionVisible} />
+                    </p>
                     <p className="mt-2 text-sm font-medium text-slate-500">{item.label}</p>
                   </div>
                 ))}

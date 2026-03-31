@@ -14,6 +14,7 @@ function LogoCarousel({ items, ariaLabel, autoplayOffset = 0 }) {
   const slides = chunkItems(items, 3);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const autoplayDelay = 9600;
 
   useEffect(() => {
     if (slides.length <= 1 || isPaused) {
@@ -26,14 +27,14 @@ function LogoCarousel({ items, ariaLabel, autoplayOffset = 0 }) {
 
       intervalId = window.setInterval(() => {
         setCurrentIndex((index) => (index === slides.length - 1 ? 0 : index + 1));
-      }, 6200);
+      }, autoplayDelay);
     }, autoplayOffset);
 
     return () => {
       window.clearTimeout(timeoutId);
       window.clearInterval(intervalId);
     };
-  }, [autoplayOffset, isPaused, slides.length]);
+  }, [autoplayDelay, autoplayOffset, isPaused, slides.length]);
 
   const goToPrevious = () => {
     setCurrentIndex((index) => (index === 0 ? slides.length - 1 : index - 1));
@@ -52,7 +53,7 @@ function LogoCarousel({ items, ariaLabel, autoplayOffset = 0 }) {
     >
       <div className="overflow-hidden">
         <div
-          className="flex transition-transform duration-300 ease-out"
+          className="flex transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {slides.map((slide, slideIndex) => (

@@ -11,6 +11,14 @@ function Layout({ children }) {
   const timerRef = useRef(null);
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, [location.pathname]);
+
+  useEffect(() => {
     setIsLoadingRoute(true);
 
     if (timerRef.current) {
