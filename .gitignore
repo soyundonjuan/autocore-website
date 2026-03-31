@@ -1,0 +1,5 @@
+node_modules
+dist
+.DS_Store
+assets/testimonials/
+public/assets/testimonials/video-testimonio-sloh.mp4

@@ -1,7 +1,8 @@
 export const navLinks = [
   { label: "Inicio", href: "/" },
-  { label: "Soluciones", href: "/soluciones" },
-  { label: "FAQ", href: "/faq" },
+  { label: "Plataforma", href: "/plataforma" },
+  { label: "Nosotros", href: "/nosotros" },
+  { label: "Precios", href: "/precios" },
   { label: "Contacto", href: "/contacto" },
 ];
 
@@ -54,34 +55,39 @@ export const steps = [
 
 export const faqs = [
   {
-    question: "¿Autocore reemplaza mi PMS o mi Channel Manager?",
+    question: "¿Autocore es una pasarela de pagos?",
     answer:
-      "No. Autocore se integra con tu ecosistema actual para automatizar el flujo de cobro, validación y operación sin reemplazar tus herramientas core.",
+      "Autocore es un orquestador de pagos inteligentes, especializado en hotelería. Las pasarelas solo procesan pagos; Autocore se asegura de que el cobro suceda bien, a tiempo y alineado con la operación y la estrategia de ventas del hotel.",
   },
   {
-    question: "¿Cuánto tarda la activación?",
+    question: "¿El dinero es intermediado por Autocore?",
     answer:
-      "El proceso estándar está pensado para dejar al hotel operando en menos de dos semanas, según la disponibilidad documental y técnica de las integraciones.",
+      "El dinero viaja directamente a las entidades financieras y al banco del hotel. Autocore no retiene, no terceriza ni administra fondos del hotel.",
   },
   {
-    question: "¿Cómo gana valor el área financiera?",
+    question: "¿Cómo ayuda Autocore a reducir cancelaciones y no-shows?",
     answer:
-      "El hotel mejora el recaudo, acelera conciliaciones y reduce tareas manuales que consumen tiempo del equipo administrativo.",
+      "Ejecutando y validando pagos antes del check-in, con automatización y alertas ante garantías de pago inválidas. Esto asegura ingresos anticipados y libera habitaciones a tiempo para generar ventas reales.",
   },
   {
-    question: "¿Qué modelo de cobro maneja Autocore?",
+    question: "¿Es posible cobrar tarjetas virtuales de Booking, Expedia, Despegar y otras plataformas?",
     answer:
-      "El esquema principal se comunica como un modelo por transacción exitosa, acompañado por instalación e integraciones sin complejidad innecesaria para la operación.",
+      "Autocore fue creado precisamente para facilitar el cobro seguro y eficiente de reservas provenientes de todos los canales hoteleros. Permite cobrar tarjetas virtuales de OTAs y ventas directas, automatizando validaciones, fechas correctas de cobro y reduciendo errores operativos, contracargos y reprocesos desde las extranets.",
   },
   {
-    question: "¿Qué hace exactamente Autocore?",
+    question: "¿Qué tan segura es la información sensible?",
     answer:
-      "Autocore automatiza el flujo de pagos digitales en hoteles conectando canales de reserva, pagos, banca y operación para que el cobro sea más eficiente y rentable.",
+      "Todas las transacciones se ejecutan con cifrado de extremo a extremo y validaciones antifraude. Se elimina la exposición de datos sensibles y el manejo manual de tarjetas, diseñado teniendo en cuenta la rotación de personal.",
   },
   {
-    question: "¿A qué tipo de hotel le conviene?",
+    question: "¿Autocore reemplaza mi pasarela o mi banco?",
     answer:
-      "Es especialmente relevante para hoteles que necesitan reducir trabajo manual, mejorar confirmaciones de pago y profesionalizar su recaudo digital con un enfoque más escalable.",
+      "No necesariamente. Autocore se integra con bancos y entidades financieras para orquestar el cobro de reservas, sin necesidad de terminar relaciones existentes con otros proveedores de pago.",
+  },
+  {
+    question: "¿Qué tipo de hoteles pueden usar Autocore?",
+    answer:
+      "Hoteles independientes, cadenas, hostales, co-livings y operadores con múltiples propiedades. Autocore se adapta a la operación y a los canales de venta del alojamiento, no al revés.",
   },
 ];
 
@@ -104,3 +110,4 @@ export const contactChannels = [
 ];
 
 export const demoLink = "https://app.autocore.pro/public/contact-us";
+export const loginLink = "https://app.autocore.pro/";

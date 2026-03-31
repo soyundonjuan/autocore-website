@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import BrandLogo from "./BrandLogo";
-import { demoLink, navLinks } from "../data/siteData";
+import { demoLink, loginLink, navLinks } from "../data/siteData";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -38,12 +38,20 @@ function Navbar() {
             </NavLink>
           ))}
           <a
+            className="inline-flex items-center rounded-full border border-[var(--color-accent-200)] bg-white px-5 py-3 text-sm font-medium text-[var(--color-brand-900)] transition hover:border-[var(--color-accent-300)] hover:bg-[var(--color-accent-50)]"
+            href={loginLink}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Iniciar sesión
+          </a>
+          <a
             className="inline-flex items-center rounded-full bg-[var(--color-accent-500)] px-5 py-3 text-sm font-medium text-white transition hover:bg-[var(--color-accent-600)]"
             href={demoLink}
             target="_blank"
             rel="noreferrer"
           >
-            Solicitar demo
+            Agendar una demo
           </a>
         </nav>
       </div>
@@ -68,12 +76,20 @@ function Navbar() {
               </NavLink>
             ))}
             <a
+              className="mt-3 inline-flex items-center justify-center rounded-full border border-[var(--color-accent-200)] bg-white px-5 py-3 text-sm font-medium text-[var(--color-brand-900)]"
+              href={loginLink}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Iniciar sesión
+            </a>
+            <a
               className="mt-3 inline-flex items-center justify-center rounded-full bg-[var(--color-accent-500)] px-5 py-3 text-sm font-medium text-white"
               href={demoLink}
               target="_blank"
               rel="noreferrer"
             >
-              Solicitar demo
+              Agendar una demo
             </a>
           </nav>
         </div>

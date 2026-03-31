@@ -5,7 +5,7 @@ import { contactChannels, socialLinks } from "../data/siteData";
 function Footer() {
   return (
     <footer className="border-t border-slate-200 bg-white">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 lg:grid-cols-[1fr_.8fr_.8fr] lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 lg:grid-cols-[1fr_.75fr_.75fr_.75fr] lg:px-8">
         <div className="max-w-md">
           <BrandLogo compact />
           <p className="mt-5 text-base leading-7 text-slate-600">
@@ -42,6 +42,22 @@ function Footer() {
                 </a>
               </li>
             ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-slate-500">Legales</h3>
+          <ul className="mt-5 space-y-3 text-base text-slate-600">
+            <li>
+              <Link className="transition hover:text-[var(--color-brand-900)]" to="/politica-de-privacidad">
+                Política de privacidad
+              </Link>
+            </li>
+            <li>
+              <Link className="transition hover:text-[var(--color-brand-900)]" to="/terminos-y-condiciones">
+                Términos y condiciones
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

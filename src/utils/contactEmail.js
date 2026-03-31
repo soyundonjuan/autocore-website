@@ -1,0 +1,30 @@
+export const contactEmailAddress = "info@autocore.pro";
+
+function cleanValue(value) {
+  return String(value ?? "").trim();
+}
+
+export function buildContactMailto(formData, sourceLabel) {
+  const rows = Array.from(formData.entries())
+    .map(([key, value]) => [cleanValue(key), cleanValue(value)])
+    .filter(([, value]) => value.length > 0);
+
+  const body = [
+    `Origen: ${sourceLabel}`,
+    "",
+    ...rows.map(([key, value]) => `${key}: ${value}`),
+  ].join("\n");
+
+  const subject = `Nuevo contacto desde ${sourceLabel}`;
+
+  return `mailto:${contactEmailAddress}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+export function submitContactEmail(event, sourceLabel) {
+  event.preventDefault();
+
+  const formData = new FormData(event.currentTarget);
+  const mailto = buildContactMailto(formData, sourceLabel);
+
+  window.location.href = mailto;
+}

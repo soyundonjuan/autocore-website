@@ -109,6 +109,77 @@ const icons = {
       <path d="M8 11h8M8 14h5" strokeLinecap="round" />
     </>
   ),
+  linkedin: (
+    <>
+      <path d="M7 9v8M7 6.5a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1ZM11 17V9m0 0h3a3 3 0 0 1 3 3v5m-6-8v1m0 0a3.5 3.5 0 0 1 3-1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  instagram: (
+    <>
+      <rect x="4" y="4" width="16" height="16" rx="4" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="3.5" />
+      <circle cx="17.2" cy="6.8" r=".8" fill="currentColor" stroke="none" />
+    </>
+  ),
+  facebook: (
+    <>
+      <path d="M13.5 20v-7h2.6l.4-3h-3V8.2c0-.9.3-1.5 1.6-1.5H16.7V4.1c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2V10H8v3h2.3v7" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  qr: (
+    <>
+      <rect x="4" y="4" width="5" height="5" rx="1" strokeLinejoin="round" />
+      <rect x="15" y="4" width="5" height="5" rx="1" strokeLinejoin="round" />
+      <rect x="4" y="15" width="5" height="5" rx="1" strokeLinejoin="round" />
+      <path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z" fill="currentColor" stroke="none" />
+    </>
+  ),
+  terminal: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" strokeLinejoin="round" />
+      <path d="m7 10 2 2-2 2M12 14h5" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  link: (
+    <>
+      <path d="M10 14 8.5 15.5a3 3 0 1 1-4.2-4.2L7 8.6M14 10l1.5-1.5a3 3 0 1 1 4.2 4.2L17 15.4M9 15l6-6" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  dashboard: (
+    <>
+      <rect x="3.5" y="4.5" width="17" height="15" rx="2" strokeLinejoin="round" />
+      <path d="M7 15v-3M11 15V9M15 15v-5M7 8h9" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  checkCircle: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="m8.7 12 2.1 2.2 4.5-4.7" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  creditCard: (
+    <>
+      <rect x="3.5" y="6" width="17" height="12" rx="2.5" strokeLinejoin="round" />
+      <path d="M3.5 10.5h17M7 15h3.5" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M3.8 12h16.4M12 3.8c2.4 2.2 3.8 5.1 3.8 8.2S14.4 18 12 20.2M12 3.8C9.6 6 8.2 8.9 8.2 12s1.4 6 3.8 8.2" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  whatsapp: (
+    <>
+      <path d="M12 20a8 8 0 1 0-4.1-1.1L4 20l1.2-3.7A8 8 0 0 0 12 20Z" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9.5 8.8c.2-.4.5-.4.8-.4h.5c.2 0 .4 0 .6.5.2.6.8 2 .8 2.2 0 .2.1.4 0 .6-.1.2-.2.4-.4.6l-.4.4c-.2.2-.3.3-.1.6.2.4.9 1.5 2 2 .9.4 1.2.3 1.5.2.3-.1.9-1 1.1-1.3.1-.3.3-.2.6-.1.3.1 1.8.9 2.1 1 .3.2.5.2.6.3.1.1.1.8-.2 1.5-.3.7-1.7 1.4-2.3 1.5-.6.1-1.4.2-3.8-.8-2.8-1.1-4.6-4-4.8-4.2-.2-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.3Z" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  arrowUp: (
+    <>
+      <path d="M12 19V5M6 11l6-6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
 };
 
 function AppIcon({ name, className = "h-6 w-6", strokeWidth = 1.8 }) {

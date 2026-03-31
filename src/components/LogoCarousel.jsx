@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function chunkItems(items, size) {
   const groups = [];
@@ -10,9 +10,30 @@ function chunkItems(items, size) {
   return groups;
 }
 
-function LogoCarousel({ items, ariaLabel }) {
+function LogoCarousel({ items, ariaLabel, autoplayOffset = 0 }) {
   const slides = chunkItems(items, 3);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (slides.length <= 1 || isPaused) {
+      return undefined;
+    }
+
+    let intervalId;
+    const timeoutId = window.setTimeout(() => {
+      setCurrentIndex((index) => (index === slides.length - 1 ? 0 : index + 1));
+
+      intervalId = window.setInterval(() => {
+        setCurrentIndex((index) => (index === slides.length - 1 ? 0 : index + 1));
+      }, 6200);
+    }, autoplayOffset);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.clearInterval(intervalId);
+    };
+  }, [autoplayOffset, isPaused, slides.length]);
 
   const goToPrevious = () => {
     setCurrentIndex((index) => (index === 0 ? slides.length - 1 : index - 1));
@@ -23,7 +44,12 @@ function LogoCarousel({ items, ariaLabel }) {
   };
 
   return (
-    <div className="mt-8" aria-label={ariaLabel}>
+    <div
+      className="mt-8"
+      aria-label={ariaLabel}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="overflow-hidden">
         <div
           className="flex transition-transform duration-300 ease-out"
@@ -36,7 +62,7 @@ function LogoCarousel({ items, ariaLabel }) {
                   <img
                     src={logo.src}
                     alt={logo.alt}
-                    className="h-[80%] w-[80%] max-h-none max-w-none object-contain"
+                    className="h-[92%] w-[92%] max-h-none max-w-none object-contain"
                     loading="lazy"
                   />
                 </div>

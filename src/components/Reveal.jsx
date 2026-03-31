@@ -6,6 +6,7 @@ function Reveal({
   delay = 0,
   as: Component = "div",
   variant = "up",
+  ...props
 }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -47,6 +48,7 @@ function Reveal({
       ref={ref}
       className={`reveal reveal-${variant} ${visible ? "reveal-visible" : ""} ${className}`.trim()}
       style={{ transitionDelay: `${delay}ms` }}
+      {...props}
     >
       {children}
     </Component>
