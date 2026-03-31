@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import Footer from "./Footer";
 import FloatingActions from "./FloatingActions";
 import Navbar from "./Navbar";
+import { RouteTransitionProvider } from "./RouteTransitionContext";
 import SiteLoader from "./SiteLoader";
 
 function Layout({ children }) {
@@ -37,19 +38,23 @@ function Layout({ children }) {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <SiteLoader visible={isLoadingRoute} />
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[var(--color-brand-900)] focus:px-4 focus:py-2 focus:text-white"
-      >
-        Saltar al contenido
-      </a>
-      <Navbar />
-      <main id="main-content">{children}</main>
-      <FloatingActions />
-      <Footer />
-    </div>
+    <RouteTransitionProvider value={{ isRouteReady: !isLoadingRoute }}>
+      <div className="min-h-screen bg-white text-slate-900">
+        <SiteLoader visible={isLoadingRoute} />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[var(--color-brand-900)] focus:px-4 focus:py-2 focus:text-white"
+        >
+          Saltar al contenido
+        </a>
+        <Navbar />
+        <main id="main-content" key={location.pathname}>
+          {children}
+        </main>
+        <FloatingActions />
+        <Footer />
+      </div>
+    </RouteTransitionProvider>
   );
 }
 

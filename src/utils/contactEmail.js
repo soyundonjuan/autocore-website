@@ -4,6 +4,20 @@ function cleanValue(value) {
   return String(value ?? "").trim();
 }
 
+function normalizePropertyType(value) {
+  const normalized = cleanValue(value).toLowerCase();
+
+  if (normalized === "hostal") {
+    return "hostal";
+  }
+
+  if (normalized === "renta corta") {
+    return "establecimiento de renta corta";
+  }
+
+  return "hotel";
+}
+
 export function buildContactMailto(formData, sourceLabel) {
   const rows = Array.from(formData.entries())
     .map(([key, value]) => [cleanValue(key), cleanValue(value)])
@@ -25,6 +39,11 @@ export function submitContactEmail(event, sourceLabel) {
 
   const formData = new FormData(event.currentTarget);
   const mailto = buildContactMailto(formData, sourceLabel);
+  const propertyType = normalizePropertyType(formData.get("Tipo de propiedad"));
+  const thankYouUrl = `/gracias?tipo=${encodeURIComponent(propertyType)}`;
 
   window.location.href = mailto;
+  window.setTimeout(() => {
+    window.location.assign(thankYouUrl);
+  }, 200);
 }

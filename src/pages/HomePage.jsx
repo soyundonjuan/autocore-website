@@ -85,6 +85,7 @@ const testimonials = [
     body:
       "Nuestra prioridad siempre ha sido la seguridad de nuestros clientes. Con Autocore no solo fortalecimos ese control, sino que ganamos respaldo y agilidad en el servicio. Hoy el proceso es más confiable y mucho más eficiente para el hotel.",
     image: "/assets/testimonials/liliana-gomez.png",
+    video: "/assets/testimonials/video-testimonio-sloh.mp4",
     metrics: [
       { value: 75, label: "Ventas con pago aprobado" },
       { value: 47, label: "Validación anticipada de tarjetas" },
@@ -768,7 +769,7 @@ function TestimonialSection() {
 
       {isVideoOpen && current.video ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-6 py-10 backdrop-blur-sm">
-          <div className="relative w-full max-w-4xl overflow-hidden rounded-[2rem] bg-black shadow-[0_24px_80px_rgba(0,0,0,0.4)]">
+          <div className="relative inline-flex max-h-[80vh] max-w-full overflow-hidden rounded-[2rem] shadow-[0_24px_80px_rgba(0,0,0,0.4)]">
             <button
               type="button"
               onClick={() => setIsVideoOpen(false)}
@@ -783,7 +784,7 @@ function TestimonialSection() {
               src={current.video}
               controls
               autoPlay
-              className="aspect-video w-full bg-black"
+              className="block max-h-[80vh] w-auto max-w-[min(100vw-3rem,30rem)] rounded-[2rem] bg-black object-contain"
             />
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useRouteTransition } from "./RouteTransitionContext";
 
 function Reveal({
   children,
@@ -10,11 +11,16 @@ function Reveal({
 }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
+  const { isRouteReady } = useRouteTransition();
+
+  useEffect(() => {
+    setVisible(false);
+  }, [isRouteReady]);
 
   useEffect(() => {
     const node = ref.current;
 
-    if (!node) {
+    if (!node || !isRouteReady) {
       return undefined;
     }
 
@@ -41,7 +47,7 @@ function Reveal({
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, []);
+  }, [isRouteReady]);
 
   return (
     <Component
