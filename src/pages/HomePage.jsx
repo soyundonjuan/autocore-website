@@ -5,7 +5,7 @@ import FaqList from "../components/FaqList";
 import LogoCarousel from "../components/LogoCarousel";
 import Reveal from "../components/Reveal";
 import SectionIntro from "../components/SectionIntro";
-import { contactChannels, demoLink, faqs, hotelLogos, partnerLogos, socialLinks } from "../data/siteData";
+import { contactChannels, demoLink, expertWhatsAppLink, faqs, hotelLogos, partnerLogos, socialLinks } from "../data/siteData";
 import { submitContactEmail } from "../utils/contactEmail";
 
 const heroChannels = ["Booking", "Expedia", "Despegar", "Ventas directas", "PMS"];
@@ -76,6 +76,11 @@ const ecosystemBenefits = [
   "Cobros automáticos de reservas",
   "Pagos seguros y validados",
   "Dinero directo al banco del hotel",
+];
+const ecosystemNodes = [
+  { label: "Banco", icon: "bank", className: "ecosystem-node-top" },
+  { label: "Pago online", icon: "wallet", className: "ecosystem-node-left" },
+  { label: "PMS", icon: "hotel", className: "ecosystem-node-right" },
 ];
 const testimonials = [
   {
@@ -432,6 +437,22 @@ function DifferenceSection() {
 }
 
 function EcosystemSection() {
+  const [activeEcosystemNode, setActiveEcosystemNode] = useState(0);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (mediaQuery.matches) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setActiveEcosystemNode((current) => (current + 1) % ecosystemNodes.length);
+    }, 2000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
       <div className="grid gap-12 lg:grid-cols-[30rem_1fr] lg:items-center">
@@ -460,26 +481,16 @@ function EcosystemSection() {
                 <path id="ecosystem-path" d="M50 12 L15 74 L85 74 Z" fill="none" />
               </svg>
 
-              <div className="ecosystem-node ecosystem-node-top">
-                <span className="ecosystem-node-icon">
-                  <AppIcon name="bank" className="h-6 w-6" />
-                </span>
-                <span className="ecosystem-node-label">Banco</span>
-              </div>
-
-              <div className="ecosystem-node ecosystem-node-left">
-                <span className="ecosystem-node-icon">
-                  <AppIcon name="wallet" className="h-6 w-6" />
-                </span>
-                <span className="ecosystem-node-label">Pago online</span>
-              </div>
-
-              <div className="ecosystem-node ecosystem-node-right">
-                <span className="ecosystem-node-icon">
-                  <AppIcon name="hotel" className="h-6 w-6" />
-                </span>
-                <span className="ecosystem-node-label">PMS</span>
-              </div>
+              {ecosystemNodes.map((node, index) => (
+                <div key={node.label} className={`ecosystem-node ${node.className}`}>
+                  <span className={`ecosystem-node-icon ${index === activeEcosystemNode ? "is-active" : ""}`}>
+                    <AppIcon name={node.icon} className="h-6 w-6" />
+                  </span>
+                  <span className={`ecosystem-node-label ${index === activeEcosystemNode ? "is-active" : ""}`}>
+                    {node.label}
+                  </span>
+                </div>
+              ))}
 
               <div className="ecosystem-core">
                 <span className="ecosystem-core-wave ecosystem-core-wave-1" aria-hidden="true" />
@@ -934,7 +945,9 @@ function HomePage() {
                 Solicitar demo gratis
               </a>
               <a
-                href="/contacto"
+                href={expertWhatsAppLink}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[var(--color-accent-200)] bg-white px-6 py-4 text-base font-medium text-[var(--color-brand-900)] transition hover:border-[var(--color-accent-300)] hover:bg-[var(--color-accent-50)]"
               >
                 Hablar con un experto
@@ -1053,7 +1066,9 @@ function HomePage() {
               Agenda una demo
             </a>
             <a
-              href="/contacto"
+              href={expertWhatsAppLink}
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-white/20 px-6 py-4 text-base font-medium text-white transition hover:bg-white/10"
             >
               Hablar con un experto

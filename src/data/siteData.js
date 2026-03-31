@@ -111,3 +111,5 @@ export const contactChannels = [
 
 export const demoLink = "https://app.autocore.pro/public/contact-us";
 export const loginLink = "https://app.autocore.pro/";
+export const expertWhatsAppLink =
+  "https://wa.me/573205406782?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20acerca%20de%20Autocore";

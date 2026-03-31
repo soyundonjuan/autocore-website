@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import AppIcon from "../components/AppIcon";
 import Reveal from "../components/Reveal";
-import { demoLink } from "../data/siteData";
+import { demoLink, expertWhatsAppLink } from "../data/siteData";
 
 const pricingPoints = [
   "Autocore no cobra mensualidades, soporte ni integraciones.",
@@ -538,7 +538,9 @@ function PricingPage() {
                 Agendar una demo
               </a>
               <a
-                href="/contacto"
+                href={expertWhatsAppLink}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[var(--color-accent-200)] bg-white px-6 py-4 text-base font-medium text-[var(--color-brand-900)] transition hover:border-[var(--color-accent-300)] hover:bg-[var(--color-accent-50)]"
               >
                 Hablar con un experto
@@ -638,7 +640,9 @@ function PricingPage() {
                 Agendar una demo
               </a>
               <a
-                href="/contacto"
+                href={expertWhatsAppLink}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-white/20 px-6 py-4 text-base font-medium text-white transition hover:bg-white/10"
               >
                 Hablar con un experto
@@ -705,7 +709,9 @@ function PricingPage() {
               Agendar una demo
             </a>
             <a
-              href="/contacto"
+              href={expertWhatsAppLink}
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[var(--color-accent-200)] bg-white px-6 py-4 text-base font-medium text-[var(--color-brand-900)] transition hover:border-[var(--color-accent-300)] hover:bg-[var(--color-accent-50)]"
             >
               Hablar con un experto

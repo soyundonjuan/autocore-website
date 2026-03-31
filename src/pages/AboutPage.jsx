@@ -1,6 +1,6 @@
 import AppIcon from "../components/AppIcon";
 import Reveal from "../components/Reveal";
-import { demoLink } from "../data/siteData";
+import { demoLink, expertWhatsAppLink } from "../data/siteData";
 import { useEffect, useRef, useState } from "react";
 
 const pillars = [
@@ -150,7 +150,9 @@ function AboutPage() {
                 Agendar una demo
               </a>
               <a
-                href="/contacto"
+                href={expertWhatsAppLink}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[var(--color-accent-200)] bg-white px-6 py-4 text-base font-medium text-[var(--color-brand-900)] transition hover:border-[var(--color-accent-300)] hover:bg-[var(--color-accent-50)]"
               >
                 Hablar con un experto

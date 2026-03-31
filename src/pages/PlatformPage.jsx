@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import AppIcon from "../components/AppIcon";
 import Reveal from "../components/Reveal";
-import { demoLink } from "../data/siteData";
+import { demoLink, expertWhatsAppLink } from "../data/siteData";
 
 const platformSteps = [
   {
@@ -94,7 +94,7 @@ const automationRows = [
   { portal: "Booking.com", reservationId: "44554544158", status: "Aprobado" },
   { portal: "Despegar", reservationId: "1026667", status: "Aprobado" },
   { portal: "Expedia", reservationId: "4454528216", status: "Aprobado" },
-  { portal: "Booking.com", reservationId: "4884103489", status: "Declinado" },
+  { portal: "Booking.com", reservationId: "4884103489", status: "Aprobado" },
   { portal: "HyperGuest", reservationId: "4738176882", status: "Aprobado" },
   { portal: "Hotelbeds", reservationId: "4721957255", status: "Aprobado" },
 ];
@@ -621,7 +621,9 @@ function PlatformPage() {
                 Agendar una demo
               </a>
               <a
-                href="/contacto"
+                href={expertWhatsAppLink}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[var(--color-brand-900)] px-6 py-4 text-base font-medium text-[var(--color-brand-900)] transition hover:bg-[var(--color-brand-50)]"
               >
                 Hablar con un experto
