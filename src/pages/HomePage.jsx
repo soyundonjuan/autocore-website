@@ -85,7 +85,7 @@ const testimonials = [
     body:
       "Nuestra prioridad siempre ha sido la seguridad de nuestros clientes. Con Autocore no solo fortalecimos ese control, sino que ganamos respaldo y agilidad en el servicio. Hoy el proceso es más confiable y mucho más eficiente para el hotel.",
     image: "/assets/testimonials/liliana-gomez.png",
-    video: "/assets/testimonials/video-testimonio-sloh.mp4",
+    video: "/assets/testimonials/video-testimonio-sloh-low.mp4",
     metrics: [
       { value: 75, label: "Ventas con pago aprobado" },
       { value: 47, label: "Validación anticipada de tarjetas" },
