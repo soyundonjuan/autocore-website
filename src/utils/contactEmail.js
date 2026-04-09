@@ -8,20 +8,11 @@ function cleanValue(value) {
 function normalizePropertyType(value) {
   const normalized = cleanValue(value).toLowerCase();
 
-  if (["hostal", "hostel"].includes(normalized)) {
+  if (normalized === "hostal") {
     return "hostal";
   }
 
-  if (
-    [
-      "renta corta",
-      "short-term rental",
-      "short term rental",
-      "alquiler de corta duración",
-      "alquiler de corta duracion",
-      "aluguel de curta temporada",
-    ].includes(normalized)
-  ) {
+  if (normalized === "renta corta") {
     return "establecimiento de renta corta";
   }
 

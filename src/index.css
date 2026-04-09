@@ -183,10 +183,7 @@
   }
 
   .floating-action-btn-whatsapp {
-    border: 1px solid color-mix(in srgb, var(--color-accent-500) 30%, white);
-    background:
-      radial-gradient(circle at 30% 28%, rgb(255 255 255 / 0.18), transparent 38%),
-      linear-gradient(180deg, var(--color-accent-500), var(--color-accent-600));
+    background: #25d366;
     color: white;
   }
 
@@ -221,25 +218,8 @@
     text-align: left;
     font-size: 0.95rem;
     font-weight: 500;
-    color: rgb(51 65 85);
-    cursor: pointer;
-    transition:
-      border-color 180ms ease,
-      background 180ms ease,
-      color 180ms ease,
-      transform 180ms ease;
-  }
-
-  .floating-language-option:hover {
-    border-color: color-mix(in srgb, var(--color-accent-500) 28%, white);
-    background: linear-gradient(180deg, rgb(255 255 255), var(--color-brand-50));
-    color: var(--color-brand-900);
-  }
-
-  .floating-language-option.is-active {
-    border-color: color-mix(in srgb, var(--color-accent-500) 34%, white);
-    background: color-mix(in srgb, var(--color-accent-500) 10%, white);
-    color: var(--color-accent-600);
+    color: rgb(148 163 184);
+    cursor: not-allowed;
   }
 
   .accent-chip {

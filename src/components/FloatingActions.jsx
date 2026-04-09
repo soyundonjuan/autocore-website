@@ -1,39 +1,26 @@
 import { useState } from "react";
 import AppIcon from "./AppIcon";
-import { useLocale } from "../i18n/LocaleContext";
-import { localeNames } from "../i18n/translations";
 
+const languages = ["Español", "English", "Português"];
 const whatsappLink = "https://wa.me/573205406782";
 
 function FloatingActions() {
   const [open, setOpen] = useState(false);
-  const { locale, setLocale, translate } = useLocale();
-  const languages = Object.entries(localeNames);
-  const backToTopLabel =
-    locale === "en" ? "Back to top" : locale === "pt" ? "Voltar ao topo" : "Volver al inicio";
 
   return (
     <div className="floating-actions">
       <div className="floating-language-wrap">
         {open ? (
-          <div className="floating-language-panel" role="dialog" aria-label={translate("Cambiar idioma")}>
-            <p className="floating-language-title">{translate("Idioma")}</p>
+          <div className="floating-language-panel" role="dialog" aria-label="Selector de idioma deshabilitado">
+            <p className="floating-language-title">Idioma</p>
             <div className="space-y-2">
-              {languages.map(([languageCode, languageLabel]) => (
-                <button
-                  key={languageCode}
-                  type="button"
-                  className={`floating-language-option${locale === languageCode ? " is-active" : ""}`}
-                  aria-pressed={locale === languageCode}
-                  onClick={() => {
-                    setLocale(languageCode);
-                    setOpen(false);
-                  }}
-                >
-                  {languageLabel}
+              {languages.map((language) => (
+                <button key={language} type="button" disabled className="floating-language-option">
+                  {language}
                 </button>
               ))}
             </div>
+            <p className="mt-3 text-xs leading-5 text-slate-500">Disponible al finalizar la traducción del sitio.</p>
           </div>
         ) : null}
 
@@ -42,7 +29,7 @@ function FloatingActions() {
           className="floating-action-btn floating-action-btn-light"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
-          aria-label={translate("Cambiar idioma")}
+          aria-label="Cambiar idioma"
         >
           <AppIcon name="globe" className="h-5 w-5" />
         </button>
@@ -53,7 +40,7 @@ function FloatingActions() {
         target="_blank"
         rel="noreferrer"
         className="floating-action-btn floating-action-btn-whatsapp"
-        aria-label={translate("Escribir por WhatsApp")}
+        aria-label="Escribir por WhatsApp"
       >
         <AppIcon name="whatsapp" className="h-5 w-5" />
       </a>
@@ -62,7 +49,7 @@ function FloatingActions() {
         type="button"
         className="floating-action-btn floating-action-btn-light"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        aria-label={backToTopLabel}
+        aria-label="Volver al inicio"
       >
         <AppIcon name="arrowUp" className="h-5 w-5" />
       </button>
