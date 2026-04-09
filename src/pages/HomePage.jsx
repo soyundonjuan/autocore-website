@@ -975,17 +975,17 @@ function HomePage() {
   return (
     <>
       <section className="hero-surface overflow-hidden">
-        <div className="mx-auto grid max-w-7xl gap-16 px-6 py-20 lg:grid-cols-[1.05fr_.95fr] lg:px-8 lg:py-28">
-          <Reveal className="max-w-2xl" variant="left">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-6 sm:py-16 lg:grid-cols-[1.05fr_.95fr] lg:gap-16 lg:px-8 lg:py-28">
+          <Reveal className="order-2 min-w-0 max-w-2xl lg:order-1" variant="left">
             <span className="eyebrow">Pagos digitales para hoteles</span>
-            <h1 className="mt-7 max-w-2xl text-5xl font-black leading-[1.04] tracking-tight text-[var(--color-brand-900)] md:text-6xl">
+            <h1 className="mt-6 max-w-2xl text-4xl font-black leading-[1.04] tracking-tight text-[var(--color-brand-900)] sm:text-5xl md:text-6xl">
               Automatiza los pagos de tu hotel y evita pérdidas por reservas impagas
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
               Convierte reservas en dinero real. Automatiza el cobro de reservas de Booking, Expedia, Despegar y ventas
               directas para evitar no-shows, cancelaciones y contracargos.
             </p>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-500">
+            <p className="mt-4 max-w-2xl text-[0.95rem] leading-7 text-slate-500 sm:text-base">
               Plataforma de pagos inteligente para hoteles que permite centralizar cobros, reducir pérdidas y asegurar
               el flujo de caja.
             </p>
@@ -1007,7 +1007,7 @@ function HomePage() {
                 Hablar con un experto
               </a>
             </div>
-            <div className="mt-12 overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 px-5 py-5 shadow-[0_18px_48px_rgba(4,2,59,0.08)] backdrop-blur">
+            <div className="mt-10 overflow-hidden rounded-[1.5rem] border border-white/70 bg-white/80 px-4 py-4 shadow-[0_18px_48px_rgba(4,2,59,0.08)] backdrop-blur sm:mt-12 sm:rounded-[2rem] sm:px-5 sm:py-5">
               <p className="text-sm font-bold uppercase tracking-[0.22em] text-[var(--color-accent-600)]">
                 Integrado con los principales canales de reservas
               </p>
@@ -1026,37 +1026,39 @@ function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal className="relative" variant="right" delay={120}>
-            <div className="absolute inset-0 rounded-[2rem] bg-[var(--color-brand-900)] shadow-[0_24px_80px_rgba(4,2,59,0.18)]" />
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[var(--color-brand-900)] p-6 text-white lg:p-8">
-              <div className="absolute left-8 top-8 h-28 w-28 rounded-full bg-[var(--color-accent-500)]/30 blur-3xl" />
-              <div className="absolute bottom-10 right-6 h-32 w-32 rounded-full bg-white/10 blur-3xl" />
+          <Reveal className="order-1 min-w-0 lg:order-2" variant="right" delay={120}>
+            <div className="relative mx-auto w-full max-w-[22rem] sm:max-w-none">
+              <div className="absolute inset-0 rounded-[1.5rem] bg-[var(--color-brand-900)] shadow-[0_24px_80px_rgba(4,2,59,0.18)] sm:rounded-[2rem]" />
+              <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-[var(--color-brand-900)] p-4 text-white sm:p-5 lg:rounded-[2rem] lg:p-8">
+              <div className="absolute left-4 top-4 h-20 w-20 rounded-full bg-[var(--color-accent-500)]/30 blur-3xl sm:left-8 sm:top-8 sm:h-28 sm:w-28" />
+              <div className="absolute bottom-6 right-4 h-24 w-24 rounded-full bg-white/10 blur-3xl sm:bottom-10 sm:right-6 sm:h-32 sm:w-32" />
               <div className="relative">
-                <div className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-5 py-4">
+                <div className="flex flex-col gap-3 rounded-[1.35rem] border border-white/10 bg-white/5 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:rounded-3xl sm:px-5">
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-[var(--color-brand-100)]">Panel operativo</p>
-                    <p className="mt-2 text-lg font-medium">Cobros automatizados</p>
+                    <p className="mt-2 text-base font-medium sm:text-lg">Cobros automatizados</p>
                   </div>
-                  <span className="rounded-full bg-emerald-400/15 px-3 py-2 text-sm font-medium text-emerald-200">
+                  <span className="inline-flex w-fit rounded-full bg-emerald-400/15 px-3 py-2 text-sm font-medium text-emerald-200">
                     Activa
                   </span>
                 </div>
                 <img
                   src="/assets/hero-automation.svg"
                   alt="Ilustración de flujo de pagos automatizados entre reservas, bancos y operación hotelera"
-                  className="mt-8 w-full rounded-[1.75rem] border border-white/10 bg-white/5 p-4"
+                  className="mt-5 w-full rounded-[1.2rem] border border-white/10 bg-white/5 p-3 sm:mt-6 sm:rounded-[1.4rem] sm:p-4 lg:mt-8 lg:rounded-[1.75rem]"
                 />
-                <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2 sm:gap-4 lg:mt-8">
+                  <div className="rounded-[1.35rem] border border-white/10 bg-white/5 p-4 sm:rounded-3xl sm:p-5">
                     <p className="text-sm text-[var(--color-brand-100)]">Automatización operacional</p>
-                    <p className="mt-3 text-xl font-bold">Menos intervención manual en reservas y conciliación</p>
+                    <p className="mt-3 text-lg font-bold leading-7 sm:text-xl">Menos intervención manual en reservas y conciliación</p>
                   </div>
-                  <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                  <div className="rounded-[1.35rem] border border-white/10 bg-white/5 p-4 sm:rounded-3xl sm:p-5">
                     <p className="text-sm text-[var(--color-brand-100)]">Validación antifraude</p>
-                    <p className="mt-3 text-xl font-bold">Controles bancarios en tiempo real por transacción</p>
+                    <p className="mt-3 text-lg font-bold leading-7 sm:text-xl">Controles bancarios en tiempo real por transacción</p>
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </Reveal>
         </div>
