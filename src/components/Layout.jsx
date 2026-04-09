@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Footer from "./Footer";
 import FloatingActions from "./FloatingActions";
@@ -9,7 +9,39 @@ import SiteLoader from "./SiteLoader";
 function Layout({ children }) {
   const location = useLocation();
   const [isLoadingRoute, setIsLoadingRoute] = useState(true);
-  const timerRef = useRef(null);
+  const transitionRef = useRef({
+    completeTimer: null,
+    actionTimer: null,
+  });
+
+  const clearTransitionTimers = useCallback(() => {
+    if (transitionRef.current.actionTimer) {
+      clearTimeout(transitionRef.current.actionTimer);
+      transitionRef.current.actionTimer = null;
+    }
+
+    if (transitionRef.current.completeTimer) {
+      clearTimeout(transitionRef.current.completeTimer);
+      transitionRef.current.completeTimer = null;
+    }
+  }, []);
+
+  const startVisualTransition = useCallback((action, options = {}) => {
+    const { duration = 950, actionDelay = 150 } = options;
+
+    setIsLoadingRoute(true);
+    clearTransitionTimers();
+
+    if (typeof action === "function") {
+      transitionRef.current.actionTimer = window.setTimeout(() => {
+        action();
+      }, actionDelay);
+    }
+
+    transitionRef.current.completeTimer = window.setTimeout(() => {
+      setIsLoadingRoute(false);
+    }, duration);
+  }, [clearTransitionTimers]);
 
   useEffect(() => {
     window.scrollTo({
@@ -20,25 +52,23 @@ function Layout({ children }) {
   }, [location.pathname]);
 
   useEffect(() => {
-    setIsLoadingRoute(true);
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = window.setTimeout(() => {
-      setIsLoadingRoute(false);
-    }, 950);
+    startVisualTransition();
 
     return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+      clearTransitionTimers();
     };
-  }, [location.pathname]);
+  }, [clearTransitionTimers, location.pathname, startVisualTransition]);
+
+  const transitionValue = useMemo(
+    () => ({
+      isRouteReady: !isLoadingRoute,
+      startVisualTransition,
+    }),
+    [isLoadingRoute, startVisualTransition],
+  );
 
   return (
-    <RouteTransitionProvider value={{ isRouteReady: !isLoadingRoute }}>
+    <RouteTransitionProvider value={transitionValue}>
       <div className="min-h-screen bg-white text-slate-900">
         <SiteLoader visible={isLoadingRoute} />
         <a
