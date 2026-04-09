@@ -198,7 +198,26 @@ function AnimatedAlternativeStat({ item, active }) {
   return `$${Math.round(count).toLocaleString("es-CO")}`;
 }
 
-function MetricCounter({ value }) {
+function formatAlternativeStat(item) {
+  if (item.kind === "word") {
+    return item.value;
+  }
+
+  if (item.kind === "percent") {
+    return `${item.value.toLocaleString("es-CO", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}%`;
+  }
+
+  if (item.kind === "currencyCop") {
+    return `$${Math.round(item.value).toLocaleString("es-CO")} COP`;
+  }
+
+  return `$${Math.round(item.value).toLocaleString("es-CO")}`;
+}
+
+function MetricCounter({ value, delayMs = 0 }) {
   const isNegative = value.startsWith("-");
   const target = Number.parseInt(value.replace(/[^\d]/g, ""), 10);
   const [count, setCount] = useState(0);
@@ -213,6 +232,7 @@ function MetricCounter({ value }) {
 
     let frameId;
     let startTime;
+    let startTimeoutId;
     const duration = 1400;
 
     const animate = (time) => {
@@ -229,10 +249,15 @@ function MetricCounter({ value }) {
       }
     };
 
-    frameId = window.requestAnimationFrame(animate);
+    startTimeoutId = window.setTimeout(() => {
+      frameId = window.requestAnimationFrame(animate);
+    }, delayMs);
 
-    return () => window.cancelAnimationFrame(frameId);
-  }, [target]);
+    return () => {
+      window.clearTimeout(startTimeoutId);
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [delayMs, target]);
 
   return `${isNegative ? "-" : "+"}${count}%`;
 }
@@ -375,9 +400,7 @@ function PricingChart() {
               style={{ animationDelay: `${820 + index * 130}ms` }}
             >
               <p className="text-sm text-[var(--color-brand-100)]">{metric.label}</p>
-              <p className="mt-3 text-2xl font-black text-white">
-                <MetricCounter value={metric.value} />
-              </p>
+              <p className="mt-3 text-2xl font-black text-white">{metric.value}</p>
             </div>
           ))}
         </div>
@@ -570,7 +593,11 @@ function PricingPage() {
                   {plan.featured ? <span className="pricing-plan-pill">Más elegido</span> : null}
                 </div>
                 <p className="mt-6 text-4xl font-black tracking-tight text-[var(--color-brand-900)]">
-                  <AnimatedPlanRate value={plan.rateValue} active={plansSectionVisible} />
+                  {plan.rateValue.toLocaleString("es-CO", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                  % /Venta
                 </p>
                 <div className="mt-8 flex-1 space-y-4">
                   <div className="pricing-plan-row">
@@ -674,9 +701,7 @@ function PricingPage() {
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {alternativePaymentStats.map((item) => (
                   <div key={item.label} className="pricing-alt-stat">
-                    <p className="text-3xl font-black tracking-tight text-[var(--color-brand-900)]">
-                      <AnimatedAlternativeStat item={item} active={alternativeSectionVisible} />
-                    </p>
+                    <p className="text-3xl font-black tracking-tight text-[var(--color-brand-900)]">{formatAlternativeStat(item)}</p>
                     <p className="mt-2 text-sm font-medium text-slate-500">{item.label}</p>
                   </div>
                 ))}

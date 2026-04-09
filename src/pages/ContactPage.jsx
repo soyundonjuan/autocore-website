@@ -74,6 +74,12 @@ function ContactPage() {
             className="rounded-[2.5rem] bg-white p-8 shadow-[0_24px_60px_rgba(15,23,42,0.08)] lg:p-10"
           >
             <form className="space-y-10" onSubmit={(event) => submitContactEmail(event, "Contacto")}>
+              <div className="contact-honeypot" aria-hidden="true">
+                <label htmlFor="contact-company-website">Sitio web</label>
+                <input id="contact-company-website" type="text" name="_honey" tabIndex="-1" autoComplete="off" />
+              </div>
+              <input type="hidden" name="_form_started_at" value={String(Date.now())} readOnly />
+
               <div>
                 <p className="text-xl font-medium text-[var(--color-brand-900)]">Información de alojamiento</p>
                 <div className="mt-6 grid gap-4">

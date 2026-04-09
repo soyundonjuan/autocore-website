@@ -31,6 +31,7 @@ function normalizePropertyType(value) {
 export function buildContactMailto(formData, sourceLabel) {
   const rows = Array.from(formData.entries())
     .map(([key, value]) => [cleanValue(key), cleanValue(value)])
+    .filter(([key]) => !key.startsWith("_"))
     .filter(([, value]) => value.length > 0);
 
   const body = [
@@ -51,9 +52,19 @@ export async function submitContactEmail(event, sourceLabel) {
   const submitButton = form.querySelector('button[type="submit"]');
   const originalButtonMarkup = submitButton?.innerHTML;
   const formData = new FormData(form);
+  const honeypotValue = cleanValue(formData.get("_honey"));
+  const formStartedAt = Number.parseInt(cleanValue(formData.get("_form_started_at")), 10);
   const propertyType = normalizePropertyType(formData.get("Tipo de propiedad"));
   const thankYouUrl = `/gracias?tipo=${encodeURIComponent(propertyType)}`;
   const mailto = buildContactMailto(formData, sourceLabel);
+
+  if (honeypotValue) {
+    return;
+  }
+
+  if (Number.isFinite(formStartedAt) && Date.now() - formStartedAt < 2500) {
+    return;
+  }
 
   formData.append("_subject", `Nuevo contacto desde ${sourceLabel}`);
   formData.append("_captcha", "false");

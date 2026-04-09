@@ -778,6 +778,17 @@
     color: var(--color-accent-700);
   }
 
+  .contact-honeypot {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   input[type="number"].contact-input::-webkit-outer-spin-button,
   input[type="number"].contact-input::-webkit-inner-spin-button {
     opacity: 1;
@@ -1029,6 +1040,47 @@
   .platform-table-row {
     border-top: 1px solid rgb(226 232 240);
     color: rgb(51 65 85);
+    position: relative;
+    transition:
+      transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 320ms ease,
+      box-shadow 320ms ease,
+      opacity 320ms ease;
+    will-change: transform;
+  }
+
+  .platform-table-row.is-updating {
+    background: linear-gradient(90deg, rgb(239 246 255), rgb(255 255 255));
+    box-shadow: inset 3px 0 0 var(--color-accent-500);
+  }
+
+  .platform-table-row.is-shifting {
+    opacity: 0.9;
+  }
+
+  .platform-table-row.is-shifting-up {
+    transform: translateY(-6px);
+  }
+
+  .platform-table-row.is-shifting-down {
+    transform: translateY(6px);
+  }
+
+  .platform-reservation-id {
+    display: inline-block;
+    transition:
+      transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 320ms ease,
+      filter 320ms ease,
+      color 320ms ease;
+  }
+
+  .platform-reservation-id.is-updating {
+    color: var(--color-brand-900);
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0);
+    animation: platform-reservation-refresh 1.7s ease;
   }
 
   .platform-status {
@@ -1110,6 +1162,94 @@
     color: var(--color-brand-900);
   }
 
+  .platform-form-value.is-typing {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.35rem;
+  }
+
+  .platform-typing-caret {
+    display: inline-block;
+    width: 1px;
+    height: 1.05rem;
+    margin-left: 0.1rem;
+    background: transparent;
+    opacity: 0;
+  }
+
+  .platform-typing-caret.is-active {
+    opacity: 1;
+    background: var(--color-brand-900);
+    animation: platform-caret-blink 0.9s steps(1) infinite;
+  }
+
+  .platform-select-shell {
+    position: relative;
+    display: flex;
+    min-height: 2.6rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.24rem;
+    border-radius: 0.85rem;
+    background: rgb(248 250 252);
+    padding: 0.7rem 0.85rem;
+  }
+
+  .platform-select-arrow {
+    font-size: 1rem;
+    line-height: 1;
+    color: rgb(100 116 139);
+    transition: transform 220ms ease;
+  }
+
+  .platform-select-arrow.is-open {
+    transform: rotate(180deg);
+  }
+
+  .platform-select-options {
+    position: absolute;
+    left: 0.9rem;
+    right: 0.9rem;
+    top: calc(100% + 0.55rem);
+    display: grid;
+    gap: 0.45rem;
+    border-radius: 0.95rem;
+    background: rgb(255 255 255);
+    padding: 0.5rem;
+    box-shadow:
+      0 16px 30px rgb(15 23 42 / 0.1),
+      inset 0 0 0 1px rgb(226 232 240);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition:
+      opacity 220ms ease,
+      transform 220ms ease;
+    z-index: 3;
+  }
+
+  .platform-select-options.is-open {
+    opacity: 1;
+    pointer-events: none;
+    transform: translateY(0);
+  }
+
+  .platform-select-option {
+    display: flex;
+    min-height: 2.1rem;
+    align-items: center;
+    border-radius: 0.7rem;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: rgb(51 65 85);
+  }
+
+  .platform-select-option.is-active {
+    background: rgb(219 234 254);
+    color: var(--color-brand-900);
+  }
+
   .platform-pay-button {
     display: inline-flex;
     align-items: center;
@@ -1131,9 +1271,23 @@
     border: 1px solid rgb(226 232 240);
     padding: 0.95rem 1rem;
     color: rgb(15 23 42);
+    transition:
+      border-color 220ms ease,
+      background-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .platform-method-row.is-expanded {
+    border-color: rgb(191 219 254);
+    background: rgb(248 250 252);
+    box-shadow: inset 0 0 0 1px rgb(219 234 254);
   }
 
   .platform-method-row + .platform-method-row {
+    margin-top: 0.72rem;
+  }
+
+  .platform-bank-grid + .platform-method-row {
     margin-top: 0.72rem;
   }
 
@@ -1142,10 +1296,27 @@
   }
 
   .platform-bank-grid {
-    margin: 0.75rem 0;
+    margin: 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition:
+      max-height 320ms ease,
+      opacity 220ms ease,
+      transform 220ms ease,
+      margin 220ms ease;
+  }
+
+  .platform-bank-grid.is-expanded {
+    margin: 0.75rem 0;
+    max-height: 10rem;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .platform-bank-chip {
@@ -1158,6 +1329,31 @@
     background: rgb(248 250 252);
     color: rgb(15 23 42);
     font-weight: 700;
+    transition:
+      border-color 220ms ease,
+      background-color 220ms ease,
+      box-shadow 220ms ease,
+      transform 220ms ease;
+  }
+
+  .platform-bank-chip.is-selected {
+    border-color: rgb(147 197 253);
+    background: linear-gradient(180deg, rgb(239 246 255), rgb(219 234 254));
+    box-shadow:
+      inset 0 0 0 1px rgb(191 219 254),
+      0 10px 24px rgb(59 130 246 / 0.12);
+    transform: translateY(-1px);
+  }
+
+  .platform-method-arrow {
+    font-size: 1rem;
+    line-height: 1;
+    color: rgb(71 85 105);
+    transition: transform 220ms ease;
+  }
+
+  .platform-method-arrow.is-expanded {
+    transform: rotate(180deg);
   }
 
   .platform-integration-shell {
@@ -1344,12 +1540,29 @@
   .platform-orbit-shell::before {
     content: "";
     position: absolute;
-    left: 100%;
-    right: 100%;
-    top: 100%;
-    bottom: 100%;
+    left: 50%;
+    top: 58%;
+    width: 24.5rem;
+    height: 10.5rem;
+    transform: translateX(-50%);
+    border-radius: 9999px;
+    background: linear-gradient(180deg, rgb(9 5 76 / 0), rgb(9 5 76 / 0.82) 28%, rgb(9 5 76 / 1) 100%);
+    filter: blur(20px);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .platform-orbit-shell::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 61.2%;
+    width: 25.5rem;
+    height: 8.9rem;
+    transform: translateX(-50%);
+    border-radius: 9999px 9999px 1.8rem 1.8rem;
     background: var(--color-brand-900);
-    filter: blur(18px);
+    filter: blur(16px);
     opacity: 0.98;
     pointer-events: none;
     z-index: 2;
@@ -1363,6 +1576,7 @@
     width: 23.5rem;
     transform: translate(-50%, -50%);
     will-change: transform;
+    z-index: 1;
   }
 
   .platform-orbit-ring {
@@ -1415,6 +1629,7 @@
     top: 61.5%;
     width: min(58%, 18.75rem);
     transform: translate(-50%, -50%);
+    z-index: 3;
     z-index: 3;
   }
 
@@ -1532,11 +1747,27 @@
     animation: pricing-line-draw 1.55s ease-out forwards;
   }
 
+  .pricing-chart-line-glow {
+    fill: none;
+    stroke: rgb(125 187 255 / 0.28);
+    stroke-width: 9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: blur(4px);
+    opacity: 0;
+    animation: pricing-line-glow 1.7s ease-out forwards;
+  }
+
   .pricing-chart-point {
     fill: var(--color-accent-500);
     stroke: white;
     stroke-width: 3;
     animation: pricing-point-pop 460ms ease-out both;
+    filter: drop-shadow(0 0 10px rgb(125 187 255 / 0.45));
+  }
+
+  .pricing-metric-card {
+    animation: pricing-metric-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .pricing-plan-card {
@@ -1807,6 +2038,38 @@
   }
 }
 
+@keyframes platform-reservation-refresh {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(14px);
+  }
+
+  28% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes platform-caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
 @keyframes platform-flow-dash {
   from {
     stroke-dashoffset: 0;
@@ -1902,6 +2165,20 @@
   }
 }
 
+@keyframes pricing-line-glow {
+  0% {
+    opacity: 0;
+  }
+
+  55% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 @keyframes pricing-point-pop {
   0% {
     opacity: 0;
@@ -1911,6 +2188,18 @@
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes pricing-metric-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

@@ -195,59 +195,60 @@ function PlatformFeatureVisual({ type }) {
       return undefined;
     }
 
-    let timeoutId;
+    const timeoutIds = [];
+    const schedule = (callback, delay) => {
+      const timeoutId = window.setTimeout(callback, delay);
+      timeoutIds.push(timeoutId);
+      return timeoutId;
+    };
 
-    const typeField = (fieldIndex, charIndex = 0) => {
-      const value = terminalTypingFields[fieldIndex].value;
+    const runCycle = () => {
+      setTypingIndex(0);
+      setTypedLengths(terminalTypingFields.map(() => 0));
+      setIsQuotaOpen(false);
 
-      if (fieldIndex === 4) {
-        setTypingIndex(4);
-        setIsQuotaOpen(true);
+      const typeField = (fieldIndex, charIndex = 0) => {
+        const value = terminalTypingFields[fieldIndex].value;
 
-        timeoutId = window.setTimeout(() => {
-          setTypedLengths((current) =>
-            current.map((length, index) => (index === 4 ? value.length : length)),
-          );
+        if (fieldIndex === 4) {
+          setTypingIndex(4);
+          setIsQuotaOpen(true);
 
-          timeoutId = window.setTimeout(() => {
-            setIsQuotaOpen(false);
+          schedule(() => {
+            setTypedLengths((current) =>
+              current.map((length, index) => (index === 4 ? value.length : length)),
+            );
 
-            timeoutId = window.setTimeout(() => {
-              setTypingIndex(0);
-              setTypedLengths(terminalTypingFields.map(() => 0));
-              typeField(0, 0);
-            }, 2000);
-          }, 700);
-        }, 650);
+            schedule(() => {
+              setIsQuotaOpen(false);
 
-        return;
-      }
+              schedule(runCycle, 2000);
+            }, 700);
+          }, 650);
 
-      if (charIndex <= value.length) {
+          return;
+        }
+
         setTypingIndex(fieldIndex);
         setTypedLengths((current) =>
           current.map((length, index) => (index === fieldIndex ? charIndex : length)),
         );
-        timeoutId = window.setTimeout(() => typeField(fieldIndex, charIndex + 1), fieldIndex === 0 ? 85 : 105);
-        return;
-      }
 
-      timeoutId = window.setTimeout(() => {
-        const nextField = fieldIndex + 1;
-
-        if (nextField < terminalTypingFields.length) {
-          typeField(nextField, 0);
+        if (charIndex < value.length) {
+          schedule(() => typeField(fieldIndex, charIndex + 1), fieldIndex === 0 ? 85 : 105);
           return;
         }
 
-        timeoutId = window.setTimeout(() => typeField(0, 0), 2000);
-      }, 650);
+        schedule(() => typeField(fieldIndex + 1, 0), 650);
+      };
+
+      typeField(0, 0);
     };
 
     setIsQuotaOpen(false);
-    typeField(0, 0);
+    runCycle();
 
-    return () => window.clearTimeout(timeoutId);
+    return () => timeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId));
   }, [type]);
 
   if (type === "automation") {

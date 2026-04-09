@@ -858,6 +858,12 @@ function HomeContactSection() {
           className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_24px_80px_rgba(4,2,59,0.08)] lg:p-12"
         >
           <form className="space-y-8" onSubmit={(event) => submitContactEmail(event, "Home")}>
+            <div className="contact-honeypot" aria-hidden="true">
+              <label htmlFor="home-company-website">Sitio web</label>
+              <input id="home-company-website" type="text" name="_honey" tabIndex="-1" autoComplete="off" />
+            </div>
+            <input type="hidden" name="_form_started_at" value={String(Date.now())} readOnly />
+
             <div>
               <p className="text-xl font-medium text-[var(--color-brand-900)]">Información de alojamiento</p>
               <div className="mt-5 grid gap-4">
