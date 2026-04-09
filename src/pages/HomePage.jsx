@@ -5,7 +5,9 @@ import FaqList from "../components/FaqList";
 import LogoCarousel from "../components/LogoCarousel";
 import Reveal from "../components/Reveal";
 import SectionIntro from "../components/SectionIntro";
+import { countryDialCodeOptions, countryOptions, propertyTypeOptions } from "../data/formOptions";
 import { contactChannels, demoLink, expertWhatsAppLink, faqs, hotelLogos, partnerLogos, socialLinks } from "../data/siteData";
+import { handleDigitsOnlyInput } from "../utils/formFields";
 import { submitContactEmail } from "../utils/contactEmail";
 
 const heroChannels = ["Booking", "Expedia", "Despegar", "Ventas directas", "PMS"];
@@ -859,45 +861,87 @@ function HomeContactSection() {
             <div>
               <p className="text-xl font-medium text-[var(--color-brand-900)]">Información de alojamiento</p>
               <div className="mt-5 grid gap-4">
-                <input className="contact-input" type="text" name="Nombre comercial" placeholder="Nombre comercial" />
-                <select className="contact-input contact-select" name="Tipo de propiedad" defaultValue="">
+                <input className="contact-input" type="text" name="Nombre comercial" placeholder="Nombre comercial" required />
+                <select className="contact-input contact-select" name="Tipo de propiedad" defaultValue="" required>
                   <option value="" disabled>
                     Tipo de propiedad
                   </option>
-                  <option>Hotel</option>
-                  <option>Hostal</option>
-                  <option>Renta corta</option>
+                  {propertyTypeOptions.map((option) => (
+                    <option key={option}>{option}</option>
+                  ))}
                 </select>
-                <input className="contact-input" type="text" name="Cantidad de habitaciones" inputMode="numeric" placeholder="Cantidad de habitaciones" />
+                <input
+                  className="contact-input"
+                  type="number"
+                  name="Cantidad de habitaciones"
+                  inputMode="numeric"
+                  min="1"
+                  step="1"
+                  placeholder="Cantidad de habitaciones"
+                  required
+                />
               </div>
             </div>
 
             <div>
               <p className="text-xl font-medium text-[var(--color-brand-900)]">Datos de contacto</p>
               <div className="mt-5 grid gap-4">
-                <input className="contact-input" type="text" name="Nombre completo" placeholder="Nombre completo" />
-                <input className="contact-input" type="text" name="Pais" placeholder="País" />
+                <input className="contact-input" type="text" name="Nombre completo" placeholder="Nombre completo" required />
+                <select className="contact-input contact-select" name="Pais" defaultValue="" required>
+                  <option value="" disabled>
+                    País
+                  </option>
+                  {countryOptions.map((country) => (
+                    <option key={country}>{country}</option>
+                  ))}
+                </select>
                 <div className="grid gap-3 sm:grid-cols-[10rem_1fr]">
-                  <select className="contact-input contact-select" name="Codigo de pais" defaultValue="+57">
-                    <option value="+57">+57 Colombia</option>
-                    <option value="+1">+1 USA / Canadá</option>
-                    <option value="+52">+52 México</option>
-                    <option value="+54">+54 Argentina</option>
-                    <option value="+56">+56 Chile</option>
-                    <option value="+51">+51 Perú</option>
-                    <option value="+593">+593 Ecuador</option>
-                    <option value="+34">+34 España</option>
+                  <select className="contact-input contact-select" name="Codigo de pais" defaultValue="+57" required>
+                    {countryDialCodeOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
-                  <input className="contact-input" type="text" name="Whatsapp o Telefono" placeholder="Whatsapp/Teléfono" />
+                  <input
+                    className="contact-input"
+                    type="tel"
+                    name="Whatsapp o Telefono"
+                    placeholder="Whatsapp/Teléfono"
+                    inputMode="numeric"
+                    pattern="[0-9]+"
+                    onInput={handleDigitsOnlyInput}
+                    autoComplete="tel-national"
+                    required
+                  />
                 </div>
-                <input className="contact-input" type="email" name="Correo electronico" placeholder="Correo electrónico" />
+                <input
+                  className="contact-input"
+                  type="email"
+                  name="Correo electronico"
+                  placeholder="Correo electrónico"
+                  autoComplete="email"
+                  required
+                />
                 <textarea
                   name="Mensaje"
                   className="contact-input min-h-[8rem] resize-none rounded-[1.75rem] py-5"
                   placeholder='Mensaje corto Ej: “Tenemos problemas cobrando OTAs”'
+                  required
                 />
               </div>
             </div>
+
+            <label className="contact-checkbox">
+              <input type="checkbox" name="Acepta terminos" value="Sí" required />
+              <span>
+                Acepto los{" "}
+                <a href="/terminos-y-condiciones" target="_blank" rel="noreferrer">
+                  términos y condiciones
+                </a>
+                .
+              </span>
+            </label>
 
             <div className="flex justify-end">
               <button
