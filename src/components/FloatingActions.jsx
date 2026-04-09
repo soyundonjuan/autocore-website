@@ -2,14 +2,12 @@ import { useState } from "react";
 import AppIcon from "./AppIcon";
 import { useLocale } from "../i18n/LocaleContext";
 import { localeNames } from "../i18n/translations";
-import { useRouteTransition } from "./RouteTransitionContext";
 
 const whatsappLink = "https://wa.me/573205406782";
 
 function FloatingActions() {
   const [open, setOpen] = useState(false);
   const { locale, setLocale, translate } = useLocale();
-  const { startVisualTransition } = useRouteTransition();
   const languages = Object.entries(localeNames);
   const backToTopLabel =
     locale === "en" ? "Back to top" : locale === "pt" ? "Voltar ao topo" : "Volver al inicio";
@@ -28,15 +26,8 @@ function FloatingActions() {
                   className={`floating-language-option${locale === languageCode ? " is-active" : ""}`}
                   aria-pressed={locale === languageCode}
                   onClick={() => {
-                    if (locale === languageCode) {
-                      setOpen(false);
-                      return;
-                    }
-
-                    startVisualTransition(() => {
-                      setLocale(languageCode);
-                      setOpen(false);
-                    });
+                    setLocale(languageCode);
+                    setOpen(false);
                   }}
                 >
                   {languageLabel}
