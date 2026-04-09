@@ -91,19 +91,17 @@ const platformFeatureSections = [
 ];
 
 const automationRows = [
-  { portal: "Booking.com", reservationId: "44554544158", status: "Aprobado" },
-  { portal: "Despegar", reservationId: "1026667", status: "Aprobado" },
-  { portal: "Expedia", reservationId: "4454528216", status: "Aprobado" },
-  { portal: "Booking.com", reservationId: "4884103489", status: "Aprobado" },
-  { portal: "HyperGuest", reservationId: "4738176882", status: "Aprobado" },
-  { portal: "Hotelbeds", reservationId: "4721957255", status: "Aprobado" },
+  { portal: "Booking.com", reservationId: "44554544158" },
+  { portal: "Despegar", reservationId: "1026667" },
+  { portal: "Expedia", reservationId: "4454528216" },
+  { portal: "Booking.com", reservationId: "4884103489" },
+  { portal: "HyperGuest", reservationId: "4738176882" },
+  { portal: "Hotelbeds", reservationId: "4721957255" },
 ];
 
-const automationReservationLoops = [
-  ["44554544158", "44554544241", "44554544302"],
-  ["4884103489", "4884103591", "4884103664"],
-  ["4721957255", "4721957348", "4721957421"],
-];
+function getNextAutomationReservation(baseId, step) {
+  return (BigInt(baseId) + BigInt(step)).toString();
+}
 
 const terminalTypingFields = [
   { label: "Numero de tarjeta", value: "**** **** **** 4318" },
@@ -114,13 +112,22 @@ const terminalTypingFields = [
 ];
 
 function PlatformFeatureVisual({ type }) {
-  const [automationStep, setAutomationStep] = useState(0);
-  const [activeAutomationRow, setActiveAutomationRow] = useState(0);
+  const [automationQueue, setAutomationQueue] = useState(() =>
+    automationRows.map((row, index) => ({
+      ...row,
+      baseIndex: index,
+      displayOrder: index + 1,
+      queueKey: `${row.portal}-${index}`,
+      status: "Pendiente",
+      isLeaving: false,
+    })),
+  );
   const [typingIndex, setTypingIndex] = useState(0);
   const [typedLengths, setTypedLengths] = useState(terminalTypingFields.map(() => 0));
   const [isQuotaOpen, setIsQuotaOpen] = useState(false);
   const [isBankExpanded, setIsBankExpanded] = useState(false);
   const [selectedBank, setSelectedBank] = useState("");
+  const automationCycleRef = useRef(0);
 
   useEffect(() => {
     if (type !== "automation") {
@@ -133,13 +140,54 @@ function PlatformFeatureVisual({ type }) {
       return undefined;
     }
 
-    const sequence = [0, 3, 5];
-    const intervalId = window.setInterval(() => {
-      setAutomationStep((current) => (current + 1) % 3);
-      setActiveAutomationRow((current) => sequence[(sequence.indexOf(current) + 1 + sequence.length) % sequence.length]);
-    }, 1700);
+    const timeoutIds = [];
+    const schedule = (callback, delay) => {
+      const timeoutId = window.setTimeout(callback, delay);
+      timeoutIds.push(timeoutId);
+      return timeoutId;
+    };
 
-    return () => window.clearInterval(intervalId);
+    const runCycle = () => {
+      schedule(() => {
+        setAutomationQueue((current) =>
+          current.map((row, index) => (index === 0 ? { ...row, status: "Aprobado" } : row)),
+        );
+      }, 1500);
+
+      schedule(() => {
+        setAutomationQueue((current) =>
+          current.map((row, index) => (index === 0 ? { ...row, isLeaving: true } : row)),
+        );
+      }, 2200);
+
+      schedule(() => {
+        setAutomationQueue((current) => {
+          const [firstRow, ...rest] = current;
+          const nextStep = automationCycleRef.current + 1;
+          automationCycleRef.current = nextStep;
+
+          const recycledRow = {
+            ...firstRow,
+            displayOrder: current.length,
+            queueKey: `${firstRow.portal}-${nextStep}`,
+            reservationId: getNextAutomationReservation(automationRows[firstRow.baseIndex].reservationId, nextStep),
+            status: "Pendiente",
+            isLeaving: false,
+          };
+
+          return [...rest, recycledRow].map((row, index) => ({
+            ...row,
+            displayOrder: index + 1,
+          }));
+        });
+
+        runCycle();
+      }, 2550);
+    };
+
+    runCycle();
+
+    return () => timeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId));
   }, [type]);
 
   useEffect(() => {
@@ -252,18 +300,7 @@ function PlatformFeatureVisual({ type }) {
   }, [type]);
 
   if (type === "automation") {
-    const rows = automationRows.map((row, index) => {
-      const loopIndex = [0, 3, 5].indexOf(index);
-
-      if (loopIndex === -1) {
-        return row;
-      }
-
-      return {
-        ...row,
-        reservationId: automationReservationLoops[loopIndex][automationStep],
-      };
-    });
+    const isQueueAdvancing = automationQueue[0]?.isLeaving;
 
     return (
       <div className="platform-feature-visual">
@@ -281,19 +318,22 @@ function PlatformFeatureVisual({ type }) {
               <span>Estado</span>
               <span />
             </div>
-            {rows.map((row, index) => (
+            {automationQueue.map((row, index) => (
               <div
-                key={`${row.portal}-${index}`}
-                className={`platform-table-row ${activeAutomationRow === index ? "is-updating" : ""} ${
-                  activeAutomationRow !== index ? "is-shifting" : ""
-                } ${activeAutomationRow < index ? "is-shifting-down" : "is-shifting-up"}`}
+                key={row.queueKey}
+                className={`platform-table-row ${row.status === "Aprobado" ? "is-updating" : ""} ${
+                  row.isLeaving ? "is-leaving" : ""
+                } ${isQueueAdvancing && index > 0 ? "is-rising" : ""}`}
               >
-                <span>{index + 1}</span>
+                <span>{row.isLeaving ? 1 : row.displayOrder}</span>
                 <span>{row.portal}</span>
-                <span className={`platform-reservation-id ${activeAutomationRow === index ? "is-updating" : ""}`}>
-                  {row.reservationId}
+                <span className="platform-reservation-id">{row.reservationId}</span>
+                <span
+                  key={`${row.queueKey}-${row.status}`}
+                  className={`platform-status ${row.status === "Aprobado" ? "is-approved" : "is-pending"}`}
+                >
+                  {row.status}
                 </span>
-                <span className={`platform-status ${row.status === "Declinado" ? "is-declined" : ""}`}>{row.status}</span>
                 <span>⋮</span>
               </div>
             ))}

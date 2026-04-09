@@ -364,13 +364,16 @@
   }
 
   .difference-flip-card {
-    perspective: 1800px;
+    perspective: 2400px;
+    transform: translateZ(0);
   }
 
   .difference-flip-inner {
     position: relative;
     min-height: 9.5rem;
     transform-style: preserve-3d;
+    transform-origin: center center -2.5rem;
+    will-change: transform;
     transition: transform 700ms cubic-bezier(0.2, 0.9, 0.2, 1);
   }
 
@@ -386,17 +389,18 @@
     position: absolute;
     inset: 0;
     transform-style: preserve-3d;
+    transform-origin: center center -2.5rem;
     box-sizing: border-box;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
 
   .difference-flip-front {
-    transform: translateZ(4.75rem);
+    transform: translateZ(2.5rem);
   }
 
   .difference-flip-back {
-    transform: rotateX(180deg) translateZ(4.75rem);
+    transform: rotateX(180deg) translateZ(2.5rem);
   }
 
   .story-progress-fill {
@@ -1054,33 +1058,18 @@
     box-shadow: inset 3px 0 0 var(--color-accent-500);
   }
 
-  .platform-table-row.is-shifting {
-    opacity: 0.9;
+  .platform-table-row.is-rising {
+    transform: translateY(-10px);
   }
 
-  .platform-table-row.is-shifting-up {
-    transform: translateY(-6px);
-  }
-
-  .platform-table-row.is-shifting-down {
-    transform: translateY(6px);
+  .platform-table-row.is-leaving {
+    opacity: 0;
+    transform: translateX(84px);
   }
 
   .platform-reservation-id {
     display: inline-block;
-    transition:
-      transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
-      opacity 320ms ease,
-      filter 320ms ease,
-      color 320ms ease;
-  }
-
-  .platform-reservation-id.is-updating {
     color: var(--color-brand-900);
-    filter: blur(0);
-    opacity: 1;
-    transform: translateY(0);
-    animation: platform-reservation-refresh 1.7s ease;
   }
 
   .platform-status {
@@ -1092,11 +1081,21 @@
     padding: 0.38rem 0.7rem;
     color: rgb(22 101 52);
     font-weight: 700;
+    transition:
+      background-color 280ms ease,
+      color 280ms ease,
+      transform 280ms ease,
+      box-shadow 280ms ease;
   }
 
-  .platform-status.is-declined {
-    background: rgb(254 226 226);
-    color: rgb(185 28 28);
+  .platform-status.is-approved {
+    animation: platform-status-approved 420ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    box-shadow: 0 0 0 1px rgb(134 239 172 / 0.2), 0 8px 18px rgb(34 197 94 / 0.12);
+  }
+
+  .platform-status.is-pending {
+    background: rgb(255 237 213);
+    color: rgb(194 65 12);
   }
 
   .platform-payment-shell,
@@ -2055,6 +2054,23 @@
     opacity: 1;
     filter: blur(0);
     transform: translateY(0);
+  }
+}
+
+@keyframes platform-status-approved {
+  0% {
+    transform: scale(0.92);
+    filter: saturate(0.9);
+  }
+
+  55% {
+    transform: scale(1.06);
+    filter: saturate(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: saturate(1);
   }
 }
 

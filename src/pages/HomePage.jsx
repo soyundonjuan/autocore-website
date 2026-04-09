@@ -84,6 +84,19 @@ const ecosystemNodes = [
   { label: "Pago online", icon: "wallet", className: "ecosystem-node-left" },
   { label: "PMS", icon: "hotel", className: "ecosystem-node-right" },
 ];
+
+function getDifferentiatorIcon(index) {
+  if (index === 0) {
+    return "route";
+  }
+
+  if (index === 1) {
+    return "wallet";
+  }
+
+  return "layers";
+}
+
 const testimonials = [
   {
     name: "Liliana Gómez",
@@ -255,7 +268,8 @@ function ProblemCardsSection() {
 }
 
 function DifferenceSection() {
-  const [activeDifferentiator, setActiveDifferentiator] = useState(0);
+  const [frontDifferentiator, setFrontDifferentiator] = useState(0);
+  const [backDifferentiator, setBackDifferentiator] = useState(1);
   const [isDifferentiatorFlipping, setIsDifferentiatorFlipping] = useState(false);
   const [isDifferentiatorResetting, setIsDifferentiatorResetting] = useState(false);
   const [isDifferentiatorPaused, setIsDifferentiatorPaused] = useState(false);
@@ -264,6 +278,16 @@ function DifferenceSection() {
   const phaseStartRef = useRef(0);
   const phaseRemainingRef = useRef(2000);
   const phaseRef = useRef("read");
+  const frontDifferentiatorRef = useRef(0);
+  const backDifferentiatorRef = useRef(1);
+
+  useEffect(() => {
+    frontDifferentiatorRef.current = frontDifferentiator;
+  }, [frontDifferentiator]);
+
+  useEffect(() => {
+    backDifferentiatorRef.current = backDifferentiator;
+  }, [backDifferentiator]);
 
   useEffect(() => {
     const clearCurrentTimeout = () => {
@@ -280,19 +304,24 @@ function DifferenceSection() {
 
       timeoutRef.current = window.setTimeout(() => {
         if (phaseRef.current === "read") {
+          const nextIndex = (frontDifferentiatorRef.current + 1) % differentiators.length;
+          setBackDifferentiator(nextIndex);
           phaseRef.current = "flip";
           setIsDifferentiatorFlipping(true);
           schedulePhase(700);
           return;
         }
 
+        const nextIndex = backDifferentiatorRef.current;
+        const followingIndex = (nextIndex + 1) % differentiators.length;
         phaseRef.current = "read";
-        setIsDifferentiatorFlipping(false);
         setIsDifferentiatorResetting(true);
-        setActiveDifferentiator((current) => (current + 1) % differentiators.length);
+        setFrontDifferentiator(nextIndex);
         setProgressCycle((current) => current + 1);
         window.requestAnimationFrame(() => {
           window.requestAnimationFrame(() => {
+            setBackDifferentiator(followingIndex);
+            setIsDifferentiatorFlipping(false);
             setIsDifferentiatorResetting(false);
           });
         });
@@ -314,7 +343,9 @@ function DifferenceSection() {
     return clearCurrentTimeout;
   }, [isDifferentiatorPaused]);
 
-  const nextDifferentiator = differentiators[(activeDifferentiator + 1) % differentiators.length];
+  const activeDifferentiator = frontDifferentiator;
+  const queuedDifferentiator = backDifferentiator;
+  const nextDifferentiator = differentiators[queuedDifferentiator];
 
   return (
     <section className="difference-surface overflow-hidden py-20 text-white lg:py-24">
@@ -348,21 +379,21 @@ function DifferenceSection() {
                       .filter(Boolean)
                       .join(" ")}
                   >
-                    <div className="difference-flip-face difference-flip-front difference-bullet rounded-[1.5rem] border border-white/10 px-5 py-5">
+                    <div
+                      key={`home-difference-front-${frontDifferentiator}`}
+                      className="difference-flip-face difference-flip-front difference-bullet rounded-[1.5rem] border border-white/10 px-5 py-5"
+                    >
                       <span className="mt-1 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-500)]/16 text-[var(--color-accent-300)]">
-                        <AppIcon
-                          name={activeDifferentiator === 0 ? "route" : activeDifferentiator === 1 ? "wallet" : "layers"}
-                          className="h-5 w-5"
-                        />
+                        <AppIcon name={getDifferentiatorIcon(activeDifferentiator)} className="h-5 w-5" />
                       </span>
                       <p className="text-base leading-7 text-slate-100">{differentiators[activeDifferentiator]}</p>
                     </div>
-                    <div className="difference-flip-face difference-flip-back difference-bullet rounded-[1.5rem] border border-white/10 px-5 py-5">
+                    <div
+                      key={`home-difference-back-${backDifferentiator}`}
+                      className="difference-flip-face difference-flip-back difference-bullet rounded-[1.5rem] border border-white/10 px-5 py-5"
+                    >
                       <span className="mt-1 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-500)]/16 text-[var(--color-accent-300)]">
-                        <AppIcon
-                          name={activeDifferentiator === 0 ? "wallet" : activeDifferentiator === 1 ? "layers" : "route"}
-                          className="h-5 w-5"
-                        />
+                        <AppIcon name={getDifferentiatorIcon(queuedDifferentiator)} className="h-5 w-5" />
                       </span>
                       <p className="text-base leading-7 text-slate-100">{nextDifferentiator}</p>
                     </div>
@@ -566,36 +597,10 @@ function EcosystemSection() {
   );
 }
 
-function AnimatedMetric({ value, label, active }) {
-  const [displayValue, setDisplayValue] = useState(active ? 0 : value);
-
-  useEffect(() => {
-    if (!active) {
-      setDisplayValue(0);
-      return undefined;
-    }
-
-    let frameId;
-    const duration = 1100;
-    const start = performance.now();
-
-    const tick = (now) => {
-      const progress = Math.min((now - start) / duration, 1);
-      setDisplayValue(Math.round(value * (1 - (1 - progress) ** 3)));
-
-      if (progress < 1) {
-        frameId = window.requestAnimationFrame(tick);
-      }
-    };
-
-    frameId = window.requestAnimationFrame(tick);
-
-    return () => window.cancelAnimationFrame(frameId);
-  }, [active, value]);
-
+function AnimatedMetric({ value, label }) {
   return (
     <div className="testimonial-metric">
-      <p className="text-4xl font-black tracking-tight text-[var(--color-accent-500)]">{displayValue}%</p>
+      <p className="text-4xl font-black tracking-tight text-[var(--color-accent-500)]">{value}%</p>
       <p className="mt-2 text-sm leading-6 text-slate-600">{label}</p>
     </div>
   );
@@ -758,7 +763,6 @@ function TestimonialSection() {
                   key={`${current.name}-${metric.label}`}
                   value={metric.value}
                   label={metric.label}
-                  active
                 />
               ))}
             </div>
