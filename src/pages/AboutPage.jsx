@@ -45,6 +45,7 @@ const milestones = [
 function AboutPage() {
   const [activeMilestone, setActiveMilestone] = useState(0);
   const [activePrinciple, setActivePrinciple] = useState(0);
+  const [nextPrincipleIndex, setNextPrincipleIndex] = useState(1);
   const [isPrincipleFlipping, setIsPrincipleFlipping] = useState(false);
   const [isPrincipleResetting, setIsPrincipleResetting] = useState(false);
   const [isPrinciplePaused, setIsPrinciplePaused] = useState(false);
@@ -53,6 +54,16 @@ function AboutPage() {
   const principlePhaseStartRef = useRef(0);
   const principlePhaseRemainingRef = useRef(2000);
   const principlePhaseRef = useRef("read");
+  const activePrincipleRef = useRef(0);
+  const nextPrincipleRef = useRef(1);
+
+  useEffect(() => {
+    activePrincipleRef.current = activePrinciple;
+  }, [activePrinciple]);
+
+  useEffect(() => {
+    nextPrincipleRef.current = nextPrincipleIndex;
+  }, [nextPrincipleIndex]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -89,20 +100,25 @@ function AboutPage() {
 
       principleTimeoutRef.current = window.setTimeout(() => {
         if (principlePhaseRef.current === "read") {
+          const nextIndex = (activePrincipleRef.current + 1) % principles.length;
+          setNextPrincipleIndex(nextIndex);
           principlePhaseRef.current = "flip";
           setIsPrincipleFlipping(true);
           schedulePhase(700);
           return;
         }
 
+        const nextIndex = nextPrincipleRef.current;
+        const followingIndex = (nextIndex + 1) % principles.length;
         principlePhaseRef.current = "read";
-        setIsPrincipleFlipping(false);
+        setActivePrinciple(nextIndex);
         setIsPrincipleResetting(true);
-        setActivePrinciple((current) => (current === principles.length - 1 ? 0 : current + 1));
         setPrincipleProgressCycle((current) => current + 1);
 
         window.requestAnimationFrame(() => {
           window.requestAnimationFrame(() => {
+            setNextPrincipleIndex(followingIndex);
+            setIsPrincipleFlipping(false);
             setIsPrincipleResetting(false);
           });
         });
@@ -124,8 +140,7 @@ function AboutPage() {
 
     return clearCurrentTimeout;
   }, [isPrinciplePaused]);
-
-  const nextPrinciple = principles[(activePrinciple + 1) % principles.length];
+  const nextPrinciple = principles[nextPrincipleIndex];
 
   return (
     <>
@@ -244,13 +259,19 @@ function AboutPage() {
                   .filter(Boolean)
                   .join(" ")}
               >
-                <div className="difference-flip-face difference-flip-front difference-bullet rounded-[1.35rem] border border-white/10 px-5 py-4">
+                <div
+                  key={`principle-front-${activePrinciple}`}
+                  className="difference-flip-face difference-flip-front difference-bullet rounded-[1.35rem] border border-white/10 px-5 py-4"
+                >
                   <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-500)]/16 text-[var(--color-accent-300)]">
                     <AppIcon name="checkCircle" className="h-4 w-4" />
                   </span>
                   <p className="text-base leading-7 text-slate-100">{principles[activePrinciple]}</p>
                 </div>
-                <div className="difference-flip-face difference-flip-back difference-bullet rounded-[1.35rem] border border-white/10 px-5 py-4">
+                <div
+                  key={`principle-back-${nextPrincipleIndex}`}
+                  className="difference-flip-face difference-flip-back difference-bullet rounded-[1.35rem] border border-white/10 px-5 py-4"
+                >
                   <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-500)]/24 text-[var(--color-accent-200)]">
                     <AppIcon name="checkCircle" className="h-4 w-4" />
                   </span>

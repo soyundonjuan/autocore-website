@@ -375,7 +375,7 @@
   }
 
   .difference-flip-inner.is-flipped {
-    transform: rotateX(-90deg);
+    transform: rotateX(-180deg);
   }
 
   .difference-flip-inner.is-resetting {
@@ -396,7 +396,7 @@
   }
 
   .difference-flip-back {
-    transform: rotateX(90deg) translateZ(4.75rem);
+    transform: rotateX(180deg) translateZ(4.75rem);
   }
 
   .story-progress-fill {

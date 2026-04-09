@@ -411,6 +411,7 @@ function PricingChart() {
 
 function PricingPage() {
   const [activePricingPoint, setActivePricingPoint] = useState(0);
+  const [nextPricingPointIndex, setNextPricingPointIndex] = useState(1);
   const [isPricingPointFlipping, setIsPricingPointFlipping] = useState(false);
   const [isPricingPointResetting, setIsPricingPointResetting] = useState(false);
   const [isPricingPointPaused, setIsPricingPointPaused] = useState(false);
@@ -419,8 +420,18 @@ function PricingPage() {
   const pricingPointPhaseStartRef = useRef(0);
   const pricingPointPhaseRemainingRef = useRef(2000);
   const pricingPointPhaseRef = useRef("read");
+  const activePricingPointRef = useRef(0);
+  const nextPricingPointRef = useRef(1);
   const [plansSectionRef, plansSectionVisible] = useInViewOnce({ threshold: 0.3 });
   const [alternativeSectionRef, alternativeSectionVisible] = useInViewOnce({ threshold: 0.3 });
+
+  useEffect(() => {
+    activePricingPointRef.current = activePricingPoint;
+  }, [activePricingPoint]);
+
+  useEffect(() => {
+    nextPricingPointRef.current = nextPricingPointIndex;
+  }, [nextPricingPointIndex]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -443,20 +454,25 @@ function PricingPage() {
 
       pricingPointTimeoutRef.current = window.setTimeout(() => {
         if (pricingPointPhaseRef.current === "read") {
+          const nextIndex = (activePricingPointRef.current + 1) % pricingPoints.length;
+          setNextPricingPointIndex(nextIndex);
           pricingPointPhaseRef.current = "flip";
           setIsPricingPointFlipping(true);
           schedulePhase(700);
           return;
         }
 
+        const nextIndex = nextPricingPointRef.current;
+        const followingIndex = (nextIndex + 1) % pricingPoints.length;
         pricingPointPhaseRef.current = "read";
-        setIsPricingPointFlipping(false);
         setIsPricingPointResetting(true);
-        setActivePricingPoint((current) => (current === pricingPoints.length - 1 ? 0 : current + 1));
+        setActivePricingPoint(nextIndex);
         setPricingPointProgressCycle((current) => current + 1);
 
         window.requestAnimationFrame(() => {
           window.requestAnimationFrame(() => {
+            setNextPricingPointIndex(followingIndex);
+            setIsPricingPointFlipping(false);
             setIsPricingPointResetting(false);
           });
         });
@@ -479,7 +495,7 @@ function PricingPage() {
     return clearCurrentTimeout;
   }, [isPricingPointPaused]);
 
-  const nextPricingPoint = pricingPoints[(activePricingPoint + 1) % pricingPoints.length];
+  const nextPricingPoint = pricingPoints[nextPricingPointIndex];
 
   return (
     <>
@@ -506,7 +522,10 @@ function PricingPage() {
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  <div className="difference-flip-face difference-flip-front rounded-[1.35rem] border border-white/70 bg-white/80 px-5 py-4 shadow-[0_14px_36px_rgba(4,2,59,0.06)] backdrop-blur">
+                  <div
+                    key={`pricing-front-${activePricingPoint}`}
+                    className="difference-flip-face difference-flip-front rounded-[1.35rem] border border-white/70 bg-white/80 px-5 py-4 shadow-[0_14px_36px_rgba(4,2,59,0.06)] backdrop-blur"
+                  >
                     <div className="flex h-full items-center gap-4">
                       <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-50)] text-[var(--color-accent-600)]">
                         <AppIcon name="checkCircle" className="h-5 w-5" />
@@ -514,7 +533,10 @@ function PricingPage() {
                       <p className="text-lg leading-8 text-slate-600">{pricingPoints[activePricingPoint]}</p>
                     </div>
                   </div>
-                  <div className="difference-flip-face difference-flip-back rounded-[1.35rem] border border-white/70 bg-white/90 px-5 py-4 shadow-[0_14px_36px_rgba(4,2,59,0.08)] backdrop-blur">
+                  <div
+                    key={`pricing-back-${nextPricingPointIndex}`}
+                    className="difference-flip-face difference-flip-back rounded-[1.35rem] border border-white/70 bg-white/90 px-5 py-4 shadow-[0_14px_36px_rgba(4,2,59,0.08)] backdrop-blur"
+                  >
                     <div className="flex h-full items-center gap-4">
                       <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-50)] text-[var(--color-accent-600)]">
                         <AppIcon name="checkCircle" className="h-5 w-5" />
