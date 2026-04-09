@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 
 const RouteTransitionContext = createContext({
   isRouteReady: true,
+  startVisualTransition: () => {},
 });
 
 export function RouteTransitionProvider({ value, children }) {
