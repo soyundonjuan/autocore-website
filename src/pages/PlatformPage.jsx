@@ -498,12 +498,12 @@ function PlatformFeatureSection({ section, reverse = false, delay = 0 }) {
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
-      <div className={`grid gap-14 lg:grid-cols-2 lg:items-center ${reverse ? "" : ""}`}>
-        <Reveal variant={reverse ? "right" : "left"} delay={delay} className={reverse ? "lg:order-2" : ""}>
+      <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
+        <Reveal variant={reverse ? "right" : "left"} delay={delay} className={reverse ? "order-1 lg:order-2" : "order-1"}>
           <PlatformFeatureVisual type={section.visual} />
         </Reveal>
 
-        <Reveal variant={reverse ? "left" : "right"} delay={delay + 90} className={reverse ? "lg:order-1" : ""}>
+        <Reveal variant={reverse ? "left" : "right"} delay={delay + 90} className={reverse ? "order-2 lg:order-1" : "order-2"}>
           <div className="platform-feature-copy max-w-2xl">
             <span className="eyebrow">Función de plataforma</span>
             <h2 className="section-title platform-feature-title">
@@ -619,11 +619,11 @@ function PlatformPage() {
     return () => window.cancelAnimationFrame(frameId);
   }, [isGraphicHovered]);
 
-  return (
+      return (
     <>
       <section className="hero-surface overflow-hidden">
         <div className="platform-hero mx-auto grid max-w-7xl gap-10 px-6 py-12 lg:grid-cols-[1.12fr_.88fr] lg:px-8 lg:py-14 lg:items-center">
-          <Reveal variant="left" className="platform-hero-copy max-w-[42rem]">
+          <Reveal variant="left" className="platform-hero-copy order-2 max-w-[42rem] lg:order-1">
             <span className="eyebrow">Pagos inteligentes para hoteles</span>
             <h1 className="mt-5 max-w-[34rem] text-5xl font-black leading-[1.01] tracking-tight text-[var(--color-brand-900)] md:text-[3.45rem]">
               Centraliza y simplifica tus pagos
@@ -672,7 +672,7 @@ function PlatformPage() {
             </div>
           </Reveal>
 
-          <Reveal variant="right" delay={120}>
+          <Reveal variant="right" delay={120} className="order-1 lg:order-2">
             <div
               className="platform-visual platform-hero-visual platform-visual-glow relative overflow-hidden rounded-[2rem] bg-[var(--color-brand-900)] p-5 shadow-[0_24px_80px_rgba(4,2,59,0.18)]"
               onMouseEnter={() => setIsGraphicHovered(true)}
